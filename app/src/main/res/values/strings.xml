@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Check Your BMI</string>
+    <string name="action_settings">O autorze</string>
+    <string name="mass">Mass</string>
+    <string name="height">Height</string>
+    <string name="calculate_BMI">Calculate BMI</string>
+    <string name="title_activity_show_bmi">ShowBMI</string>
+    <string name="title_activity_info_about_author">InfoAboutAuthor</string>
+    <string name="null_string"></string>
+    <string name="about_author">Nazywam się Fabian Morawiec.</string>
+    <string name="change_unit">Switch to change Unit</string>
+    <string name="save_Data">Save Data</string>
+    <string name="stupid_units">Lbs/Ft</string>
+    <string name="normal_units">Kg/M</string>
+    <string name="data_saved">Data saved</string>
+    <string name="wrong_parameters">Wrong Parameters</string>
+    <string name="BMI_string">BMI =</string>
+</resources>

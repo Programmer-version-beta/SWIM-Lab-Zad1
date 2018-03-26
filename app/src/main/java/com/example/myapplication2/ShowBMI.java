@@ -18,7 +18,6 @@ public class ShowBMI extends AppCompatActivity {
         setContentView(R.layout.activity_show_bmi);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         et = (EditText) findViewById(R.id.showBMIValue);
     }

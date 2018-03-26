@@ -16,12 +16,14 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
     private static final String PREFERENCES_NAME = "myPreferences";
     private static final String PREFERENCES_TEXT_FIELD = "textFieldMass";
-    private static final String PREFERENCES_TEXT_FIELD_TWO="textFieldHeight";
+    private static final String PREFERENCES_TEXT_FIELD_TWO = "textFieldHeight";
+    public static final String KEY_FOR_RESULT = "stringToShow";
+    public static final String KEY_FOR_COLOR = "color";
     private SharedPreferences preferences;
-    EditText et;
-    EditText et2;
-    TextView tv;
-    Switch sw;
+    EditText etMass;
+    EditText etHeight;
+    TextView tvUnits;
+    Switch swUnits;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,11 +32,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         preferences = getSharedPreferences(PREFERENCES_NAME, MainActivity.MODE_PRIVATE);
-        et = (EditText) findViewById(R.id.editText);
-        et2 = (EditText) findViewById(R.id.editText2);
-        tv = (TextView) findViewById(R.id.units);
-        sw = (Switch) findViewById(R.id.switch1);
-        tv.setText("Kg/M");
+        initViews();
         restoreData();
     }
 
@@ -44,20 +42,27 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    public void initViews(){
+        etMass = (EditText) findViewById(R.id.editTextMass);
+        etHeight = (EditText) findViewById(R.id.editTextHeight);
+        tvUnits = (TextView) findViewById(R.id.units);
+        swUnits = (Switch) findViewById(R.id.switchUnits);
+        tvUnits.setText(R.string.normal_units);
+    }
+
     public void calculateBMI(View view){
         BMI ob;
-        int mass = 0;
+        double mass = 0;
         double height = 0;
         double bmi = 0;
-        String result;
-        String color;
+        String result, color;
 
-        if(!et.getText().toString().equals(""))
-            mass = Integer.parseInt(et.getText().toString());
-        if(!et2.getText().toString().equals(""))
-            height =  Double.parseDouble(et2.getText().toString());
+        if(!etMass.getText().toString().equals(""))
+            mass = Double.parseDouble(etMass.getText().toString());
+        if(!etHeight.getText().toString().equals(""))
+            height = Double.parseDouble(etHeight.getText().toString());
 
-        if(sw.isChecked())
+        if(swUnits.isChecked())
             ob = new BMIForFtIb(mass, height);
         else
             ob = new BMIForKgM(mass, height);
@@ -71,35 +76,22 @@ public class MainActivity extends AppCompatActivity {
             result = getString(R.string.wrong_parameters);
         }
 
-        color = setColor(bmi);
+        color = ob.setColor(bmi);
 
         Intent intent = new Intent(getBaseContext(), ShowBMI.class);
-        intent.putExtra("stringToShow",result);
-        intent.putExtra("color",color);
+        intent.putExtra(KEY_FOR_RESULT, result);
+        intent.putExtra(KEY_FOR_COLOR, color);
         startActivity(intent);
     }
 
-    public String setColor(double bmi){
-        String color = "";
-
-        if(bmi>30)
-            color = "#FF0000";
-        else if(bmi>25 || bmi<18.5)
-            color = "#FFD700";
-        else
-            color = "#32CD32";
-
-        return color;
-    }
-
     public void changeUnit(View view) {
-        et.setText(R.string.null_string);
-        et2.setText(R.string.null_string);
+        etMass.setText(R.string.null_string);
+        etHeight.setText(R.string.null_string);
 
-        if(sw.isChecked())
-            tv.setText(R.string.stupid_units);
+        if(swUnits.isChecked())
+            tvUnits.setText(R.string.stupid_units);
         else
-            tv.setText(R.string.normal_units);
+            tvUnits.setText(R.string.normal_units);
     }
 
     @Override
@@ -123,18 +115,18 @@ public class MainActivity extends AppCompatActivity {
 
     public void saveData() {
         SharedPreferences.Editor preferencesEditor = preferences.edit();
-        String editTextMass = et.getText().toString();
-        String editTextHeight = et2.getText().toString();
+        String editTextMass = etMass.getText().toString();
+        String editTextHeight = etHeight.getText().toString();
         preferencesEditor.putString(PREFERENCES_TEXT_FIELD, editTextMass);
-        preferencesEditor.putString(PREFERENCES_TEXT_FIELD_TWO,editTextHeight);
+        preferencesEditor.putString(PREFERENCES_TEXT_FIELD_TWO, editTextHeight);
         preferencesEditor.commit();
     }
 
     private void restoreData() {
         String massFromPreferences = preferences.getString(PREFERENCES_TEXT_FIELD, "");
         String heightFromPreferences = preferences.getString(PREFERENCES_TEXT_FIELD_TWO, "");
-        et.setText(massFromPreferences);
-        et2.setText(heightFromPreferences);
+        etMass.setText(massFromPreferences);
+        etHeight.setText(heightFromPreferences);
     }
 
     private void showToast(String msg) {
